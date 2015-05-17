@@ -8,7 +8,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@interface CVAudioSession
+@interface CVAudioSession : NSObject
 
 -(void)startTheEngine;
 

@@ -11,10 +11,12 @@
 
 typedef int COOLINT;
 @import AVFoundation;
+#import "CVAudioSession.h"
 
 @interface ViewController ()
 
 @property (strong, nonatomic) UIButton *recordButton;
+@property (strong, nonatomic) CVAudioSession *audioSession;
 
 @end
 
@@ -34,6 +36,9 @@ typedef int COOLINT;
     [self.recordButton addTarget:self action:@selector(recordButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.recordButton];
 
+    self.audioSession = [[CVAudioSession alloc] init];
+    [self.audioSession startTheEngine];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -44,24 +49,6 @@ typedef int COOLINT;
 
 - (void)recordButtonPressed
 {
-    NSLog(@"Button pressed");
-
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession requestRecordPermission:^(BOOL granted) {
-        if (granted)
-            NSLog(@"Request permitted!");
-    }];
-    NSError *error;
-    [audioSession setActive:YES error:&error];
-    if (error) {
-        NSLog(@"Error setting active %@", error.localizedDescription);
-    }
-
-    NSLog(@"Available inputs: %@", [audioSession availableInputs]);
-    AVAudioSessionPortDescription *firstPort = [audioSession availableInputs].firstObject;
-
-    
-    [audioSession setInputDataSource:firstPort error:&error];
 
 }
 

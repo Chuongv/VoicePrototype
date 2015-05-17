@@ -12,6 +12,7 @@
 @interface CVAudioSession ()
 
 @property (strong, nonatomic) AVAudioSession *session;
+@property (nonatomic, assign) bool started;
 
 @end
 @implementation CVAudioSession
@@ -20,6 +21,20 @@
 {
     NSError *error;
     [self.session setActive:YES error:&error];
+    self.started = YES;
+    if (error) {
+        self.started = NO;
+        NSLog(@"Failed to start engine! :%@", error.localizedDescription);
+    }
 
+}
+
+-(void)startInput
+{
+    if (self.session) {
+        if (!self.session.inputDataSource) {
+            NSLog(@"InputDataSources: %@", self.session.inputDataSource);
+        }
+    }
 }
 @end
