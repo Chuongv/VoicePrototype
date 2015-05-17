@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F057DF551B085297004C6A60 /* CVAudioSession.m in Sources */ = {isa = PBXBuildFile; fileRef = F057DF541B085297004C6A60 /* CVAudioSession.m */; };
 		F0A08A701AB67FB600585C3E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A08A6F1AB67FB600585C3E /* main.m */; };
 		F0A08A731AB67FB600585C3E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A08A721AB67FB600585C3E /* AppDelegate.m */; };
 		F0A08A761AB67FB700585C3E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F0A08A751AB67FB700585C3E /* ViewController.m */; };
@@ -27,6 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F057DF531B085297004C6A60 /* CVAudioSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CVAudioSession.h; sourceTree = "<group>"; };
+		F057DF541B085297004C6A60 /* CVAudioSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CVAudioSession.m; sourceTree = "<group>"; };
 		F0A08A6A1AB67FB600585C3E /* VoicePrototype.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoicePrototype.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F0A08A6E1AB67FB600585C3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F0A08A6F1AB67FB600585C3E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -85,6 +88,8 @@
 				F0A08A721AB67FB600585C3E /* AppDelegate.m */,
 				F0A08A741AB67FB600585C3E /* ViewController.h */,
 				F0A08A751AB67FB700585C3E /* ViewController.m */,
+				F057DF531B085297004C6A60 /* CVAudioSession.h */,
+				F057DF541B085297004C6A60 /* CVAudioSession.m */,
 				F0A08A771AB67FB700585C3E /* Main.storyboard */,
 				F0A08A7A1AB67FB700585C3E /* Images.xcassets */,
 				F0A08A7C1AB67FB700585C3E /* LaunchScreen.xib */,
@@ -221,6 +226,7 @@
 			files = (
 				F0A08A761AB67FB700585C3E /* ViewController.m in Sources */,
 				F0A08A731AB67FB600585C3E /* AppDelegate.m in Sources */,
+				F057DF551B085297004C6A60 /* CVAudioSession.m in Sources */,
 				F0A08A701AB67FB600585C3E /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -412,6 +418,7 @@
 				F0A08A8F1AB67FB700585C3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		F0A08A901AB67FB700585C3E /* Build configuration list for PBXNativeTarget "VoicePrototypeTests" */ = {
 			isa = XCConfigurationList;
@@ -420,6 +427,7 @@
 				F0A08A921AB67FB700585C3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
