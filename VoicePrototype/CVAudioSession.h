@@ -11,5 +11,6 @@
 @interface CVAudioSession : NSObject
 
 -(void)startTheEngine;
-
+-(void)startInput;
+-(void)stopInput;
 @end

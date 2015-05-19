@@ -8,8 +8,6 @@
 
 #import "ViewController.h"
 
-
-typedef int COOLINT;
 @import AVFoundation;
 #import "CVAudioSession.h"
 
@@ -17,19 +15,14 @@ typedef int COOLINT;
 
 @property (strong, nonatomic) UIButton *recordButton;
 @property (strong, nonatomic) CVAudioSession *audioSession;
-
+@property (assign, nonatomic) bool recording;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    COOLINT num = 5;
-    COOLINT num2 = 7;
-
-    NSLog(@"num + num2 = %d", num + num2);
-
+    self.recording = false;
     CGRect buttonFrame = CGRectMake(100, 100, 100, 100);
     self.recordButton = [[UIButton alloc] initWithFrame:buttonFrame];
     self.recordButton.backgroundColor = [UIColor blackColor];
@@ -38,7 +31,7 @@ typedef int COOLINT;
 
     self.audioSession = [[CVAudioSession alloc] init];
     [self.audioSession startTheEngine];
-    
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -49,6 +42,13 @@ typedef int COOLINT;
 
 - (void)recordButtonPressed
 {
+    if (self.recording) {
+        [self.audioSession stopInput];
+        self.recording = false;
+    } else {
+        [self.audioSession startInput];
+        self.recording = true;
+    }
 
 }
 
