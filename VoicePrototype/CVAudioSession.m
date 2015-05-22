@@ -10,10 +10,15 @@
 @import AVFoundation;
 @import AudioToolbox;
 
-AudioComponentDescription ioUnitDescription;
+//AUG processing graph
 AUGraph processingGraph;
+
+//VoIP node and unit
 AUNode ioNode;
 AudioUnit ioUnit;
+AudioComponentDescription ioUnitDescription;
+
+//input and output bus
 AudioUnitElement inputBus = 1;
 AudioUnitElement outputBus = 1;
 
@@ -23,7 +28,6 @@ AudioUnitElement outputBus = 1;
 @property (strong, nonatomic) AVAudioSession *session;
 @property (nonatomic, assign) bool started;
 @property (nonatomic, assign) double sampleRate;
-
 
 -(void)setPreferredInput;
 
@@ -87,17 +91,18 @@ AudioUnitElement outputBus = 1;
         }
     }
 
-    UInt32 enableInput = 1;
+
 
     //Open the graph
     OSStatus status = AUGraphOpen(processingGraph);
     NSLog(@"OSStatus after opening graph: %d", (int)status);
 
     //Then, obtain references to the audio unit instances by way of the AUGraphNodeInfo function, as shown here
-    AUGraphNodeInfo(processingGraph, ioNode, NULL, &ioUnit);
-
+    status = AUGraphNodeInfo(processingGraph, ioNode, NULL, &ioUnit);
+    NSLog(@"OSStatus after AUGraphNodeInfo: %d", (int)status);
 
     //set the property of the audio unit to accept input
+    UInt32 enableInput = 1;
     status = AudioUnitSetProperty(
                                            ioUnit,
                                            kAudioOutputUnitProperty_EnableIO,//property we are changing
@@ -106,8 +111,9 @@ AudioUnitElement outputBus = 1;
                                            &enableInput,
                                            sizeof (enableInput)
                                            );
-
     NSLog(@"Status after kAudioOutputUnitProperty_EnableIO property: %d", status);
+
+
     //Always initialize the fields of a new audio stream basic description structure to zero
     AudioStreamBasicDescription asbd = {0};
     asbd.mSampleRate = self.sampleRate;
