@@ -101,35 +101,10 @@ AudioUnitElement outputBus = 1;
     status = AUGraphNodeInfo(processingGraph, ioNode, NULL, &ioUnit);
     NSLog(@"OSStatus after AUGraphNodeInfo: %d", (int)status);
 
-    //set the property of the audio unit to accept input
-    UInt32 enableInput = 1;
-    status = AudioUnitSetProperty(
-                                           ioUnit,
-                                           kAudioOutputUnitProperty_EnableIO,//property we are changing
-                                           kAudioUnitScope_Input,
-                                           inputBus,
-                                           &enableInput,
-                                           sizeof (enableInput)
-                                           );
-    NSLog(@"Status after kAudioOutputUnitProperty_EnableIO property: %d", status);
 
+    [self enableAudioUnitInputOutput];
 
-    //Always initialize the fields of a new audio stream basic description structure to zero
-    AudioStreamBasicDescription asbd = {0};
-    asbd.mSampleRate = self.sampleRate;
-    asbd.mFormatID = kAudioFormatLinearPCM;
-    asbd.mFormatFlags = kAudioFormatFlagIsNonInterleaved;
-    asbd.mChannelsPerFrame = 2;
-
-    //set the property of the ioUnit's stream format
-    status = AudioUnitSetProperty(
-                                  ioUnit,
-                                  kAudioUnitProperty_StreamFormat,
-                                  kAudioUnitScope_Input,
-                                  inputBus,
-                                  &asbd,
-                                  sizeof(asbd));
-    NSLog(@"Status after setting stream format: %d", status);
+    [self setUpStreamFormat];
 
 }
 
@@ -152,5 +127,48 @@ AudioUnitElement outputBus = 1;
     if (error) {
         NSLog(@"Failed to setup preferred input: %@", error.localizedDescription);
     }
+}
+
+#pragma mark - Setup AudioNode/Unit
+
+-(void)enableAudioUnitInputOutput
+{
+    //set the property of the audio unit to accept input
+    UInt32 enableInput = 1;
+    OSStatus status = AudioUnitSetProperty(
+                                  ioUnit,
+                                  kAudioOutputUnitProperty_EnableIO,//property we are changing
+                                  kAudioUnitScope_Input,
+                                  inputBus,
+                                  &enableInput,
+                                  sizeof (enableInput)
+                                  );
+    NSLog(@"Status after kAudioOutputUnitProperty_EnableIO property: %d", status);
+}
+
+-(void)setUpStreamFormat
+{
+    //Always initialize the fields of a new audio stream basic description structure to zero
+    UInt32 bytesPerSample = sizeof (SInt32);
+
+    AudioStreamBasicDescription asbd = {0};
+    asbd.mSampleRate = self.sampleRate;
+    asbd.mFormatID = kAudioFormatLinearPCM;
+    asbd.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
+    asbd.mChannelsPerFrame = 2;
+    asbd.mBytesPerFrame = bytesPerSample;
+    asbd.mBitsPerChannel = 8 * bytesPerSample;
+    asbd.mFramesPerPacket = 1;
+    asbd.mBytesPerPacket = bytesPerSample;
+
+    //set the property of the ioUnit's stream format
+    OSStatus status = AudioUnitSetProperty(
+                                  ioUnit,
+                                  kAudioUnitProperty_StreamFormat,
+                                  kAudioUnitScope_Output,
+                                  inputBus,
+                                  &asbd,
+                                  sizeof(asbd));
+    NSLog(@"Status after setting stream format: %d", status);
 }
 @end
