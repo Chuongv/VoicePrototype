@@ -13,19 +13,16 @@
 #define kOutputBus 0
 
 @interface CVAudioSession ()
-{
-    //AUG processing graph
-    AUGraph processingGraph;
 
-    //VoIP node and unit
-    AUNode ioNode;
-    AudioUnit ioUnit;
-    AudioComponentDescription ioUnitDescription;
-
-}
 @property (strong, nonatomic) AVAudioSession *session;
 @property (nonatomic, assign) bool started;
 @property (nonatomic, assign) double sampleRate;
+
+@property (nonatomic, assign) AUGraph processingGraph;
+
+@property (nonatomic, assign) AUNode ioNode;
+@property (nonatomic, assign) AudioUnit ioUnit;
+@property (nonatomic, assign) AudioComponentDescription ioUnitDescription;
 
 -(void)setPreferredInput;
 
@@ -36,15 +33,15 @@
 -(instancetype)init
 {
 
-    ioUnitDescription.componentType = kAudioUnitType_Output;
-    ioUnitDescription.componentSubType = kAudioUnitSubType_RemoteIO;
-    ioUnitDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
-    ioUnitDescription.componentFlags = 0;
-    ioUnitDescription.componentFlagsMask = 0;
+    _ioUnitDescription.componentType = kAudioUnitType_Output;
+    _ioUnitDescription.componentSubType = kAudioUnitSubType_RemoteIO;
+    _ioUnitDescription.componentManufacturer = kAudioUnitManufacturer_Apple;
+    _ioUnitDescription.componentFlags = 0;
+    _ioUnitDescription.componentFlagsMask = 0;
 
-    NewAUGraph(&processingGraph);
+    NewAUGraph(&_processingGraph);
 
-    AUGraphAddNode(processingGraph, &ioUnitDescription, &ioNode);
+    AUGraphAddNode(_processingGraph, &_ioUnitDescription, &_ioNode);
 
     self = [super init];
     self.session = [AVAudioSession sharedInstance];
@@ -99,12 +96,12 @@
     }
 
     //Open the graph
-    OSStatus status = AUGraphOpen(processingGraph);
+    OSStatus status = AUGraphOpen(self.processingGraph);
     NSLog(@"OSStatus after opening graph: %d", (int)status);
 
     //Then, obtain references to the audio unit instances by way of the AUGraphNodeInfo function, as shown here
     AudioComponentDescription ioDescription;
-    status = AUGraphNodeInfo(processingGraph, ioNode, &ioDescription, &ioUnit);
+    status = AUGraphNodeInfo(self.processingGraph, self.ioNode, &ioDescription, &_ioUnit);
     NSLog(@"OSStatus after AUGraphNodeInfo: %d", (int)status);
 
 
@@ -113,10 +110,10 @@
     [self setUpStreamFormat];
     [self connectTheRemoteElements];
     //Before you can start audio flow, an audio processing graph must be initialized by calling the AUGraphInitialize function.
-    status = AUGraphInitialize(processingGraph);
+    status = AUGraphInitialize(self.processingGraph);
     NSLog(@"OSStatus after initializing graph: %d", (int)status);
 
-    status = AUGraphStart(processingGraph);
+    status = AUGraphStart(self.processingGraph);
     NSLog(@"OSStatus after starting graph: %d", (int)status);
 
 }
@@ -148,10 +145,10 @@
 {
     AudioUnitConnection conn;
     conn.destInputNumber = kOutputBus;
-    conn.sourceAudioUnit = ioUnit;
+    conn.sourceAudioUnit = self.ioUnit;
     conn.sourceOutputNumber = kInputBus;
 
-    OSStatus status = AudioUnitSetProperty(ioUnit,
+    OSStatus status = AudioUnitSetProperty(self.ioUnit,
                                            kAudioUnitProperty_MakeConnection,
                                            kAudioUnitScope_Input,
                                            kOutputBus,
@@ -167,24 +164,24 @@
     //set the property of the audio unit to accept input
     UInt32 enableInput = 1;
     OSStatus status = AudioUnitSetProperty(
-                                  ioUnit,
+                                  self.ioUnit,
                                   kAudioOutputUnitProperty_EnableIO,//property we are changing
                                   kAudioUnitScope_Input,
                                   kInputBus,
                                   &enableInput,
                                   sizeof (enableInput)
                                   );
-    NSLog(@"Status after enabling Element 1's OutputScope property: %d", status);
+    NSLog(@"Status after enabling Element 1's OutputScope property: %d", (int)status);
 
     status = AudioUnitSetProperty(
-                                  ioUnit,
+                                  self.ioUnit,
                                   kAudioOutputUnitProperty_EnableIO,//property we are changing
                                   kAudioUnitScope_Output,
                                   kOutputBus,
                                   &enableInput,
                                   sizeof (enableInput)
                                   );
-    NSLog(@"Status after enabling Element 0's OutputScope property: %d", status);
+    NSLog(@"Status after enabling Element 0's OutputScope property: %d", (int)status);
 }
 
 -(void)setUpStreamFormat
@@ -204,12 +201,12 @@
 
     //set the property of the ioUnit's stream format
     OSStatus status = AudioUnitSetProperty(
-                                  ioUnit,
+                                  self.ioUnit,
                                   kAudioUnitProperty_StreamFormat,
                                   kAudioUnitScope_Output,
                                   kInputBus,
                                   &asbd,
                                   sizeof(asbd));
-    NSLog(@"Status after setting stream format: %d", status);
+    NSLog(@"Status after setting stream format: %d", (int)status);
 }
 @end
