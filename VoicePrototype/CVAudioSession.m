@@ -12,6 +12,8 @@
 #define kInputBus 1
 #define kOutputBus 0
 
+const double kDefaultSampleRate = 44100.0;
+
 @interface CVAudioSession ()
 
 @property (strong, nonatomic) AVAudioSession *session;
@@ -55,7 +57,7 @@
     NSError *error;
 
     //Set preferred sample rate
-    self.sampleRate = 44100.0;
+    self.sampleRate = kDefaultSampleRate;
     BOOL success = [self.session setPreferredSampleRate:self.sampleRate error:&error];
     if (!success) {
         NSLog(@"Error setting preferred sample rate: %@", error.localizedFailureReason);
